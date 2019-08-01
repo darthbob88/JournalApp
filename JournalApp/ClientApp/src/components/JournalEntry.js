@@ -43,7 +43,7 @@ export class JournalEntry extends Component {
         this.setState({ currentEntry: event.target.value });
     };
     writeJournalEntry = () => {
-        const entry = document.getElementById("journalInput").value;
+        const entry = this.state.currentEntry;
         const entryObject = { timeStamp: new Date().toString(), actualText: entry };
         const newJournalEntries = [entryObject, ...this.state.journalEntries];
         this.setState({ currentEntry: "", journalEntries: newJournalEntries });
