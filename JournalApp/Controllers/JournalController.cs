@@ -12,35 +12,32 @@ namespace JournalApp.Controllers
     public class JournalController : ControllerBase
     {
         // GET: api/Journal
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpGet("[action]")]
+        public IEnumerable<JournalEntry> GetAllEntries()
         {
-            return new string[] { "value1", "value2" };
+            JournalEntry entry1 = new JournalEntry(){ timeStamp= new DateTime(2019, 1, 1), actualText= "asdasdfsdfafk" };
+            return new JournalEntry[] {  entry1};
         }
 
         // GET: api/Journal/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("[action]")]
+        public string GetPrompt()
         {
-            return "value";
+            return "How did your day go? Anything you want to share?";
         }
 
         // POST: api/Journal
         [HttpPost]
-        public void SetConfig([FromBody] string value)
+        public void SetPrompt([FromBody] string value)
         {
         }
 
-        // PUT: api/Journal/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // POST: api/Journal
+        [HttpPost]
+        public void AddEntry([FromBody] string value)
         {
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+
     }
 }

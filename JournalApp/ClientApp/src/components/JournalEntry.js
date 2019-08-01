@@ -4,13 +4,35 @@ import "./JournalEntry.css";
 export class JournalEntry extends Component {
     constructor(props) {
         super(props);
-        const prompt = localStorage.getItem("prompt") || "How was your day? How are you feeling?";
-        const journalEntries = JSON.parse(localStorage.getItem("journalEntries")) || [];
         this.state = {
-            prompt: prompt,
-            journalEntries: journalEntries,
+            prompt: "How was your day? Are you feeling well?",
+            journalEntries: [],
             currentEntry: ""
         };
+        fetch('api/journal/GetAllEntries')
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem("journalEntries", JSON.stringify(data));
+                this.setState({ journalEntries: data });
+            }).catch(error => console.log(error)
+            );
+
+        const prompt = localStorage.getItem("prompt");
+        if (prompt == null) {
+            fetch('api/journal/GetPrompt')
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    localStorage.setItem("prompt", data);
+                    this.setState({ prompt: data });
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.setState({ prompt: "How was your day? How are you feeling?" });
+                });
+        } else {
+            this.setState({ prompt: prompt });
+        }
     }
     setPrompt = () => {
         const prompt = document.getElementById("setPrompt").value;
@@ -22,10 +44,8 @@ export class JournalEntry extends Component {
     };
     writeJournalEntry = () => {
         const entry = document.getElementById("journalInput").value;
-        const entryObject = {};
-        entryObject.timeStamp = new Date().toString();
-        entryObject.actualText = entry;
-        const newJournalEntries = [...this.state.journalEntries, entryObject];
+        const entryObject = { timeStamp: new Date().toString(), actualText: entry };
+        const newJournalEntries = [entryObject, ...this.state.journalEntries];
         this.setState({ currentEntry: "", journalEntries: newJournalEntries });
         localStorage.setItem("journalEntries", JSON.stringify(newJournalEntries));
     };
