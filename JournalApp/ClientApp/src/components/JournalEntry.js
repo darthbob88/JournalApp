@@ -7,7 +7,8 @@ export class JournalEntry extends Component {
         this.state = {
             prompt: "How was your day? Are you feeling well?",
             journalEntries: [],
-            currentEntry: ""
+            currentEntry: "",
+            tempPrompt: ""
         };
         fetch('api/journal/GetAllEntries')
             .then(response => response.json())
@@ -20,7 +21,7 @@ export class JournalEntry extends Component {
         const prompt = localStorage.getItem("prompt");
         if (prompt == null) {
             fetch('api/journal/GetPrompt')
-                .then(response => response.text())
+                .then(response => response.text()) // .json() to get a load of JSON, .text() to get a plain string. 
                 .then(data => {
                     console.log(data);
                     localStorage.setItem("prompt", data);
@@ -28,19 +29,24 @@ export class JournalEntry extends Component {
                 })
                 .catch(error => {
                     console.log(error);
-                    this.setState({ prompt: "How was your day? How are you feeling?" });
                 });
         } else {
             this.setState({ prompt: prompt });
         }
     }
     setPrompt = () => {
-        const prompt = document.getElementById("setPrompt").value;
+        const prompt = this.state.tempPrompt;
         this.setState({ prompt: prompt });
         localStorage.setItem("prompt", prompt);
     };
     handleChange = event => {
-        this.setState({ currentEntry: event.target.value });
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
     };
     writeJournalEntry = () => {
         const entry = this.state.currentEntry;
@@ -53,7 +59,7 @@ export class JournalEntry extends Component {
         return (
             <div>
                 <label>
-                    Set your prompt here. <input type="text" id="setPrompt" />
+                    Set your prompt here. <input type="text" name="tempPrompt" onChange={this.handleChange} />
                     <button type="submit" onClick={this.setPrompt}>
                         Set Prompt
           </button>
@@ -64,6 +70,7 @@ export class JournalEntry extends Component {
           <textarea
                         value={this.state.currentEntry}
                         onChange={this.handleChange}
+                        name="currentEntry"
                         id="journalInput"
                         rows="5"
                         cols="30"
@@ -74,10 +81,6 @@ export class JournalEntry extends Component {
           </button>
                 </label>
                 <ul id="fullJournal">
-                    <li>
-                        <p>{this.state.currentEntry}</p>
-                    </li>
-
                     {this.state.journalEntries.map(entry => (
                         <li key={entry.timeStamp}>
                             <p>Time: {entry.timeStamp}</p>
