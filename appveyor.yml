@@ -14,7 +14,7 @@ before_build:
   - cmd: dotnet --version
   # Display minimal restore text
   - cmd: dotnet restore ./JournalApp/JournalApp.csproj --verbosity m
-  - cmd: npm install ./JournalApp
+  - cmd: npm install ./JournalApp/ClientApp
 build_script:
   # output will be in ./src/bin/debug/netcoreapp1.1/publish
   - cmd: dotnet publish ./CribbageBot/CribbageBot.csproj
