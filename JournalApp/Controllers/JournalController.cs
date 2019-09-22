@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JournalApp.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,12 +12,21 @@ namespace JournalApp.Controllers
     [ApiController]
     public class JournalController : ControllerBase
     {
+        private readonly JournalRepository _journalRepo;
+
+        public JournalController(JournalRepository journalRepo)
+        {
+            _journalRepo = journalRepo;
+        }
         // GET: api/Journal
         [HttpGet("[action]")]
         public IEnumerable<JournalEntry> GetAllEntries()
         {
-            JournalEntry entry1 = new JournalEntry(){ timeStamp= new DateTime(2019, 1, 1), actualText= "asdasdfsdfafk" };
-            return new JournalEntry[] {  entry1};
+            var journals = _journalRepo.Get();
+            var journalEntries = journals.First().entries.ToList() ;
+            //TODO: Pull this from the database.
+            journalEntries.Add( new JournalEntry(){ timeStamp= new DateTime(2019, 1, 1), actualText= "asdasdfsdfafk" });
+            return journalEntries;
         }
 
         // GET: api/Journal/5
@@ -37,7 +47,5 @@ namespace JournalApp.Controllers
         public void AddEntry([FromBody] string value)
         {
         }
-
-
     }
 }

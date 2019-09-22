@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JournalApp.Controllers
+namespace JournalApp.Model
 {
     public struct JournalEntry
     {
