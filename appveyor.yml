@@ -19,7 +19,8 @@ build_script:
   # output will be in ./src/bin/debug/netcoreapp1.1/publish
   - cmd: dotnet publish ./JournalApp/JournalApp.csproj
 after_build:
-  # For once the build has completed
+  # Hopefully this will do something
+  - cmd: dotnet publish ./JournalApp/JournalApp.csproj
 artifacts:
  - path: '\JournalApp\bin\Debug\netcoreapp2.0\publish'
    name: Website
