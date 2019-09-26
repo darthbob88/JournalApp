@@ -22,7 +22,7 @@ after_build:
   # Hopefully this will do something
   - cmd: dotnet publish ./JournalApp/JournalApp.csproj
 artifacts:
- - path: '\JournalApp\bin\Debug\netcoreapp2.0\publish'
+ - path: '\JournalApp\bin\Debug\netcoreapp2.1\publish'
    name: Website
    type: WebDeployPackage
 clone_depth: 1
